@@ -21,7 +21,13 @@ until pg_isready -h $PGHOST -p $PGPORT -U $PGUSER; do
 done
 
 # Verificar conexão com o Redis
-until redis-cli -h $REDIS_HOST -p $REDIS_PORT ping | grep -q PONG; do
+REDIS_COMMAND="redis-cli -h $REDIS_HOST -p $REDIS_PORT"
+
+if [ -n "$REDIS_PASSWORD" ]; then
+  REDIS_COMMAND="$REDIS_COMMAND -a $REDIS_PASSWORD"
+fi
+
+until $REDIS_COMMAND ping | grep -q PONG; do
   echo "Aguardando Redis..."
   sleep 5
 done
