@@ -4,8 +4,7 @@ Essse é um guia prático e objetivo para configurar automaticamente a Evolution
 
 Todo o ambiente estará pronto para uso após seguir este tutorial.
 
-👇 Entre na **Comunidade** Visionários para aprender mais:👇
-([ENTRAR PARA COMUNIDADE](https://nathanconde.com/comunidade_visionarios)).
+👉 Entre na **Comunidade** Visionários para aprender mais: ([ENTRAR PARA COMUNIDADE](https://nathanconde.com/comunidade_visionarios)).
 
 ---
 
