@@ -13,8 +13,11 @@ ENV AUTHENTICATION_API_KEY=mude-me \
     DATABASE_SAVE_DATA_CHATS=true \
     DATABASE_SAVE_DATA_LABELS=true \
     DATABASE_SAVE_DATA_HISTORIC=true \
-    REDIS_CONNECTION_URI=redis://default:ugHxMaMvdlikEKWrJWCZXAGjjRxLsazy@redis-production-4f8f.up.railway.app:6379
-
+    REDIS_CONNECTION_URI=redis://default:ugHxMaMvdlikEKWrJWCZXAGjjRxLsazy@redis-production-4f8f.up.railway.app:6379 \
+    REDIS_HOST=redis.railway.internal \
+    REDIS_PORT=6379 \
+    REDIS_PASSWORD=ugHxMaMvdlikEKWrJWCZXAGjjRxLsazy 
+    
 # Expondo a porta da aplicação
 EXPOSE 8080
 
