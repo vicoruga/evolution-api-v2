@@ -6,13 +6,27 @@ if [ -z "$PGHOST" ] || [ -z "$PGUSER" ] || [ -z "$PGPASSWORD" ] || [ -z "$PGDATA
   exit 1
 fi
 
+if [ -z "$REDIS_HOST" ] || [ -z "$REDIS_PORT" ]; then
+  echo "Erro: Variáveis do Redis não configuradas."
+  exit 1
+fi
+
 # Criar a string de conexão do banco de dados
 export DATABASE_CONNECTION_URI="postgresql://$PGUSER:$PGPASSWORD@$PGHOST:$PGPORT/$PGDATABASE"
 
-echo "Iniciando a API Evolution com a seguinte configuração:"
-echo "PGHOST: $PGHOST"
-echo "PGDATABASE: $PGDATABASE"
-echo "PGUSER: $PGUSER"
+# Verificar conexão com o PostgreSQL
+until pg_isready -h $PGHOST -p $PGPORT -U $PGUSER; do
+  echo "Aguardando PostgreSQL..."
+  sleep 5
+done
+
+# Verificar conexão com o Redis
+until redis-cli -h $REDIS_HOST -p $REDIS_PORT ping | grep -q PONG; do
+  echo "Aguardando Redis..."
+  sleep 5
+done
+
+echo "PostgreSQL e Redis disponíveis! Iniciando a API Evolution..."
 
 # Iniciar a API Evolution
 npm run start:prod
