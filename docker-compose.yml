@@ -1,12 +1,30 @@
 version: '3.9'
 services:
+  postgres:
+    image: postgres:14
+    container_name: evolution_postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${PGUSER}
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+      POSTGRES_DB: ${PGDATABASE}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PGUSER} -d ${PGDATABASE} -h localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   evolution-api:
     build: .
     container_name: evolution_api
     restart: always
     ports:
       - "8080:8080"
-    env_file: 
+    env_file:
       - AUTHENTICATION_API_KEY=${AUTHENTICATION_API_KEY}
       - PGHOST=${PGHOST}
       - PGPORT=${PGPORT}
@@ -26,23 +44,6 @@ services:
       postgres:
         condition: service_healthy
 
-  postgres:
-    image: postgres:14
-    container_name: evolution_postgres
-    restart: always
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: ${PGUSER}
-      POSTGRES_PASSWORD: ${PGPASSWORD}
-      POSTGRES_DB: ${PGDATABASE}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${PGUSER} -d ${PGDATABASE} -h localhost"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
 volumes:
   postgres_data:
+
