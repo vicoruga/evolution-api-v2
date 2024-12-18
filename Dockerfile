@@ -13,10 +13,10 @@ ENV AUTHENTICATION_API_KEY=mude-me \
     DATABASE_SAVE_DATA_CHATS=true \
     DATABASE_SAVE_DATA_LABELS=true \
     DATABASE_SAVE_DATA_HISTORIC=true \
-    REDIS_CONNECTION_URI=redis://default:ugHxMaMvdlikEKWrJWCZXAGjjRxLsazy@redis.railway.internal:6379
+    REDIS_CONNECTION_URI=redis://default:ugHxMaMvdlikEKWrJWCZXAGjjRxLsazy@redis-production-4f8f.up.railway.app:6379
 
 # Expondo a porta da aplicação
 EXPOSE 8080
 
 # Comando para diagnóstico antes de iniciar a API
-CMD ["sh", "-c", "env && echo DATABASE_PROVIDER=$DATABASE_PROVIDER && echo DATABASE_CONNECTION_URI=$DATABASE_CONNECTION_URI && echo REDIS_CONNECTION_URI=$REDIS_CONNECTION_URI && npm run start:prod"]
+CMD ["sh", "-c", "redis-cli -u $REDIS_CONNECTION_URI ping && npm run start:prod"]
