@@ -4,5 +4,5 @@ FROM atendai/evolution-api:v2.1.1
 # Expondo a porta
 EXPOSE 8080
 
-# Usar o script como ponto de entrada
-ENTRYPOINT ["/entrypoint.sh"]
+# Comando para inicializar a aplicação
+CMD ["npm", "run", "start:prod"]
