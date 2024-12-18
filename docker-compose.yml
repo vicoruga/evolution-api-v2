@@ -6,12 +6,26 @@ services:
     restart: always
     ports:
       - "8080:8080"
-    env_file: 
-      - .env
+    environment:
+      - AUTHENTICATION_API_KEY=${AUTHENTICATION_API_KEY}
+      - PGHOST=${PGHOST}
+      - PGPORT=${PGPORT}
+      - PGDATABASE=${PGDATABASE}
+      - PGUSER=${PGUSER}
+      - PGPASSWORD=${PGPASSWORD}
+      - DATABASE_PROVIDER=postgresql
+      - DATABASE_ENABLED=true
+      - DATABASE_SAVE_DATA_INSTANCE=true
+      - DATABASE_SAVE_DATA_NEW_MESSAGE=true
+      - DATABASE_SAVE_MESSAGE_UPDATE=true
+      - DATABASE_SAVE_DATA_CONTACTS=true
+      - DATABASE_SAVE_DATA_CHATS=true
+      - DATABASE_SAVE_DATA_LABELS=true
+      - DATABASE_SAVE_DATA_HISTORIC=true
     depends_on:
       - postgres
-
-  postgres:
+      
+postgres:
     image: postgres:14
     container_name: evolution_postgres
     restart: always
