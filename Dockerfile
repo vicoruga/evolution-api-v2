@@ -4,7 +4,7 @@ FROM atendai/evolution-api:v2.1.1
 # Definindo as variáveis de ambiente
 ENV AUTHENTICATION_API_KEY=mude-me \
     DATABASE_PROVIDER=postgresql \
-    DATABASE_CONNECTION_URI=postgresql://evolution_user:evolution_password@postgres:5432/evolution_db \
+    DATABASE_CONNECTION_URI=postgresql://postgres:vblPzWkQnzyGmEZBDOKWnejzFAVjGYTJ@postgres.railway.internal:5432/railway \
     DATABASE_ENABLED=true \
     DATABASE_SAVE_DATA_INSTANCE=true \
     DATABASE_SAVE_DATA_NEW_MESSAGE=true \
