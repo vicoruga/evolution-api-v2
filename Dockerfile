@@ -1,26 +1,11 @@
-# Use uma imagem base oficial do Ubuntu
-FROM ubuntu:20.04
+# Imagem base oficial da Evolution API
+FROM atendai/evolution-api:v2.1.1
 
-# Defina o diretório de trabalho dentro do container
-WORKDIR /app
+# Variável de ambiente para a chave de autenticação
+ENV AUTHENTICATION_API_KEY=fLfTsOuvE6un1Gyz4nYwyQbho4OXHHqj
 
-# Instale dependências essenciais
-RUN apt-get update && apt-get install -y \
-    software-properties-common \
-    wget \
-    gnupg \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+# Expondo a porta que a aplicação irá utilizar
+EXPOSE 8080
 
-# Instale Evolution
-RUN apt-get update && apt-get install -y evolution evolution-ews \
-    && rm -rf /var/lib/apt/lists/*
-
-# Adicione suporte ao DBus, necessário para o Evolution
-RUN apt-get install -y dbus
-
-# Exponha a porta padrão (se necessário para o uso do Evolution)
-EXPOSE 3000
-
-# Comando para iniciar o DBus e o Evolution
-CMD ["sh", "-c", "service dbus start && evolution"]
+# Comando para iniciar a aplicação
+CMD ["npm", "run", "start:prod"]
