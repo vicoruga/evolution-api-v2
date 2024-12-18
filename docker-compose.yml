@@ -6,9 +6,44 @@ services:
     restart: always
     ports:
       - "8080:8080"
-    env_file:
-      - .env
     environment:
-      - AUTHENTICATION_API_KEY=${AUTHENTICATION_API_KEY}
-      - DATABASE_CONNECTION_URI=${DATABASE_CONNECTION_URI}
-      - REDIS_CONNECTION_URI=${REDIS_CONNECTION_URI}
+      AUTHENTICATION_API_KEY: ${AUTHENTICATION_API_KEY}
+      DATABASE_CONNECTION_URI: ${DATABASE_CONNECTION_URI}
+      REDIS_CONNECTION_URI: ${REDIS_CONNECTION_URI}
+    depends_on:
+      - redis
+      - postgres
+
+  redis:
+    image: redis:7
+    container_name: evolution_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    healthcheck:
+      test: ["CMD", "redis-cli", "-u", "${REDIS_CONNECTION_URI}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres:
+    image: postgres:14
+    container_name: evolution_postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  redis_data:
+  postgres_data:
