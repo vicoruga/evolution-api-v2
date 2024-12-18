@@ -6,33 +6,9 @@ services:
     restart: always
     ports:
       - "8080:8080"
+    env_file:
+      - .env
     environment:
-      - AUTHENTICATION_API_KEY=fLfTsOuvE6un1Gyz4nYwyQbho4OXHHqj
-      - DATABASE_PROVIDER=postgresql
-      - DATABASE_CONNECTION_URI=postgresql://postgres:vblPzWkQnzyGmEZBDOKWnejzFAVjGYTJ@postgres.railway.internal:5432/railway
-      - DATABASE_ENABLED=true
-      - DATABASE_SAVE_DATA_INSTANCE=true
-      - DATABASE_SAVE_DATA_NEW_MESSAGE=true
-      - DATABASE_SAVE_MESSAGE_UPDATE=true
-      - DATABASE_SAVE_DATA_CONTACTS=true
-      - DATABASE_SAVE_DATA_CHATS=true
-      - DATABASE_SAVE_DATA_LABELS=true
-      - DATABASE_SAVE_DATA_HISTORIC=true
-    depends_on:
-      - postgres
-
-  postgres:
-    image: postgres:14
-    container_name: evolution_postgres
-    restart: always
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER=postgres
-      POSTGRES_PASSWORD=vblPzWkQnzyGmEZBDOKWnejzFAVjGYTJ
-      POSTGRES_DB=railway
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-volumes:
-  postgres_data:
+      - AUTHENTICATION_API_KEY=${AUTHENTICATION_API_KEY}
+      - DATABASE_CONNECTION_URI=${DATABASE_CONNECTION_URI}
+      - REDIS_CONNECTION_URI=${REDIS_CONNECTION_URI}
