@@ -6,7 +6,7 @@ services:
     restart: always
     ports:
       - "8080:8080"
-    environment:
+    env_file: 
       - AUTHENTICATION_API_KEY=${AUTHENTICATION_API_KEY}
       - PGHOST=${PGHOST}
       - PGPORT=${PGPORT}
@@ -23,9 +23,10 @@ services:
       - DATABASE_SAVE_DATA_LABELS=true
       - DATABASE_SAVE_DATA_HISTORIC=true
     depends_on:
-      - postgres
-      
-postgres:
+      postgres:
+        condition: service_healthy
+
+  postgres:
     image: postgres:14
     container_name: evolution_postgres
     restart: always
@@ -37,6 +38,11 @@ postgres:
       POSTGRES_DB: ${PGDATABASE}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PGUSER} -d ${PGDATABASE} -h localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:
