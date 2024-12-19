@@ -1,6 +1,6 @@
 ### Instalação Evolution API - Comunidade Visionários
 
-Essse é um guia prático e objetivo para configurar automaticamente a Evolution API com PostgreSQL utilizando Docker e Docker Compose. 
+Essse é um guia prático e objetivo para configurar automaticamente a Evolution API com PostgreSQL e Redis utilizando Docker e Docker Compose. 
 
 Todo o ambiente estará pronto para uso após seguir este tutorial.
 
@@ -60,19 +60,43 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - AUTHENTICATION_API_KEY=${AUTHENTICATION_API_KEY}
-      - DATABASE_ENABLED=true
-      - DATABASE_PROVIDER=postgresql
-      - DATABASE_CONNECTION_URI=postgresql://evolution_user:evolution_password@postgres:5432/evolution_db
-      - DATABASE_SAVE_DATA_INSTANCE=true
-      - DATABASE_SAVE_DATA_NEW_MESSAGE=true
-      - DATABASE_SAVE_MESSAGE_UPDATE=true
-      - DATABASE_SAVE_DATA_CONTACTS=true
-      - DATABASE_SAVE_DATA_CHATS=true
-      - DATABASE_SAVE_DATA_LABELS=true
-      - DATABASE_SAVE_DATA_HISTORIC=true
+      # Configurações do PostgreSQL
+      DATABASE_ENABLED: "${DATABASE_ENABLED}"
+      DATABASE_PROVIDER: "${DATABASE_PROVIDER}"
+      DATABASE_CONNECTION_URI: "${DATABASE_CONNECTION_URI}"
+      DATABASE_CONNECTION_CLIENT_NAME: "${DATABASE_CONNECTION_CLIENT_NAME}"
+      DATABASE_SAVE_DATA_INSTANCE: "${DATABASE_SAVE_DATA_INSTANCE}"
+      DATABASE_SAVE_DATA_NEW_MESSAGE: "${DATABASE_SAVE_DATA_NEW_MESSAGE}"
+      DATABASE_SAVE_MESSAGE_UPDATE: "${DATABASE_SAVE_MESSAGE_UPDATE}"
+      DATABASE_SAVE_DATA_CONTACTS: "${DATABASE_SAVE_DATA_CONTACTS}"
+      DATABASE_SAVE_DATA_CHATS: "${DATABASE_SAVE_DATA_CHATS}"
+      DATABASE_SAVE_DATA_LABELS: "${DATABASE_SAVE_DATA_LABELS}"
+      DATABASE_SAVE_DATA_HISTORIC: "${DATABASE_SAVE_DATA_HISTORIC}"
+
+      # Configurações do Redis
+      CACHE_REDIS_ENABLED: "${CACHE_REDIS_ENABLED}"
+      CACHE_REDIS_URI: "${CACHE_REDIS_URI}"
+      CACHE_REDIS_PREFIX_KEY: "${CACHE_REDIS_PREFIX_KEY}"
+      CACHE_REDIS_SAVE_INSTANCES: "${CACHE_REDIS_SAVE_INSTANCES}"
+      CACHE_LOCAL_ENABLED: "${CACHE_LOCAL_ENABLED}"
+
+      # Chave de autenticação da API
+      AUTHENTICATION_API_KEY: "${AUTHENTICATION_API_KEY}"
     depends_on:
+      - redis
       - postgres
+
+  redis:
+    image: redis:7
+    container_name: evolution_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-u", "${CACHE_REDIS_URI}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   postgres:
     image: postgres:14
@@ -81,13 +105,17 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER=evolution_user
-      POSTGRES_PASSWORD=evolution_password
-      POSTGRES_DB=evolution_db
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_DB}"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
+  redis_data:
   postgres_data:
 ```
 
