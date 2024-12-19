@@ -119,7 +119,7 @@ docker-compose up -d
 Este comando irá:
 
 1. Criar e inicializar o PostgreSQL.
-2. Configurar a Evolution API para usar o PostgreSQL como banco de dados.
+2. Configurar a Evolution API para usar o PostgreSQL e o Redis.
 3. Expor a API na porta `8080`.
 
 ---
